@@ -28,7 +28,7 @@ public class PipelinePreprocessor {
     public String preprocessPipeline(String pipeline) throws IOException {
         BufferedReader bufReader = new BufferedReader(new StringReader(pipeline));
         StringBuffer out = new StringBuffer();
-        String line=null;
+        String line;
         while( (line=bufReader.readLine()) != null ) {
             String newLine = insertinator(line);
             out.append(newLine);
