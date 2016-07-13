@@ -1,5 +1,9 @@
 package preprocessor;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 /**
  * Hello world!
  *
@@ -36,6 +40,18 @@ public class App
 
     }
 
+    public String preprocessPipeline(String pipeline) throws IOException {
+        BufferedReader bufReader = new BufferedReader(new StringReader(pipeline));
+        StringBuffer out = new StringBuffer();
+        String line=null;
+        while( (line=bufReader.readLine()) != null ) {
+            String newLine = insertinator(line);
+            out.append(newLine);
+            out.append("\n");
+        }
+        return out.toString();
+    }
+
     private boolean missingParen(String token) {
         return !token.startsWith("(");
     }
@@ -44,12 +60,7 @@ public class App
         return tokens[tokens.length - 1];
     }
 
-
     private boolean isAtom(String token) {
-        if (token.contains("(") && Character.isLetter(token.charAt(0))) {
-            return false;
-        } else {
-            return true;
-        }
+        return token.matches("[a-zA-Z]+");
     }
 }
