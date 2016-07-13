@@ -5,17 +5,43 @@ import java.io.IOException;
 import java.io.StringReader;
 
 /**
- * Hello world!
- *
+ * Pre-process pipeline script to enable more HCL like config.
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+public class PipelinePreprocessor {
+
+
+    /**
+     * Take pipeline of the form:*
+     * pipeline {
+     *     stage 'yeah' {
+     *         echo 42
+     *     }
+     * }
+     *
+     * and make it like:*
+     * pipeline {
+     *     stage('yeah') {
+     *         echo 42
+     *     }
+     * }
+     */
+    public String preprocessPipeline(String pipeline) throws IOException {
+        BufferedReader bufReader = new BufferedReader(new StringReader(pipeline));
+        StringBuffer out = new StringBuffer();
+        String line=null;
+        while( (line=bufReader.readLine()) != null ) {
+            String newLine = insertinator(line);
+            out.append(newLine);
+            out.append("\n");
+        }
+        return out.toString();
     }
 
 
+    /**
+     * This should insert parens when a global is invoked without them.
+     * In most cases it will pass the line straight through. Works on a line by line basis.
+     */
     public String insertinator(final String line) {
         String[] tokens = line.trim().split("\\s+");
         if (lastToken(tokens).equals("{")
@@ -40,17 +66,6 @@ public class App
 
     }
 
-    public String preprocessPipeline(String pipeline) throws IOException {
-        BufferedReader bufReader = new BufferedReader(new StringReader(pipeline));
-        StringBuffer out = new StringBuffer();
-        String line=null;
-        while( (line=bufReader.readLine()) != null ) {
-            String newLine = insertinator(line);
-            out.append(newLine);
-            out.append("\n");
-        }
-        return out.toString();
-    }
 
     private boolean missingParen(String token) {
         return !token.startsWith("(");

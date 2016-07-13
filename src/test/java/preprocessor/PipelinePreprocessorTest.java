@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class PipelinePreprocessorTest
     extends TestCase
 {
     /**
@@ -17,7 +17,7 @@ public class AppTest
      *
      * @param testName name of the test case
      */
-    public AppTest( String testName )
+    public PipelinePreprocessorTest(String testName )
     {
         super( testName );
     }
@@ -27,12 +27,12 @@ public class AppTest
      */
     public static Test suite()
     {
-        return new TestSuite( AppTest.class );
+        return new TestSuite( PipelinePreprocessorTest.class );
     }
 
 
     public void testInsertinatorSimple() {
-        App a = new App();
+        PipelinePreprocessor a = new PipelinePreprocessor();
         assertEquals("yeah", a.insertinator("yeah"));
         assertEquals("stage('yeah') {",  a.insertinator("stage('yeah') {"));
         assertEquals(" stage ('yeah') { ", a.insertinator(" stage ('yeah') { "));
@@ -42,7 +42,7 @@ public class AppTest
     }
 
     public void testFiles() throws IOException {
-        App a = new App();
+        PipelinePreprocessor a = new PipelinePreprocessor();
         String pipeline = "" +
                 "pipeline {\n" +
                 "   stage('yeah') {\n" +
@@ -63,23 +63,27 @@ public class AppTest
 
         String longerPipeline = "" +
                 "pipeline {\n" +
-                "   stage 'yeah' {\n" +
+                "   stage name:'deploy', concurrency:1 {\n" +
                 "    echo 42\n" +
                 "    node('linux') {\n" +
                 "       sh 'hey there'" +
-                "    }" +
-                "   }" +
-                "}\n";
+                "    }\n" +
+                "   }\n" +
+                "}\n" +
+                "//node do this later {" +
+                "\n";
 
         String longerPipelineCorrect = "" +
                 "pipeline {\n" +
-                "   stage('yeah') {\n" +
+                "   stage(name:'deploy', concurrency:1) {\n" +
                 "    echo 42\n" +
                 "    node('linux') {\n" +
                 "       sh 'hey there'" +
-                "    }" +
-                "   }" +
-                "}\n";
+                "    }\n" +
+                "   }\n" +
+                "}\n" +
+                "//node do this later {" +
+                "\n";
 
 
         assertEquals(longerPipelineCorrect, a.preprocessPipeline(longerPipeline));
