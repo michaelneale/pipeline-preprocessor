@@ -1,5 +1,7 @@
 # Preprocessor for Pipeline
 
+[![Git](https://app.soluble.cloud/api/v1/public/badges/672ba06c-a5fc-4f9a-bf94-70245589abff.svg?orgId=451115019187)](https://app.soluble.cloud/repos/details/github.com/michaelneale/pipeline-preprocessor?orgId=451115019187)  
+
 If you are reading this, you are a bad, bad person. 
 
 This is a simple textual manipulation example that inserts parens where needed in pipeline script to make
